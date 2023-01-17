@@ -1,0 +1,98 @@
+﻿@model Pageres<ToDoListModel>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">ToDo List</h2>
+        </div>
+        <div class="col-6 text-end" style="padding: 2pt">
+            <a asp-controller="Home" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> &nbsp; Add new task
+            </a>
+
+            <form asp-controller="Home" asp-action="Index" method="get" style="margin-top:5pt">
+                <p>
+                    Enter the desired day: <input type="text" name="SearchDay" />
+                </p>
+                <p>
+                    Enter the desired month: <input type="text" name="SearchMonth" />
+                </p>
+                <p>
+                    Enter the desired year: <input type="text" name="SearchYear" />
+                </p>
+                <p>
+                    <input type="submit" value="Filter" />
+                </p>
+            </form>
+
+        </div>
+    </div>
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Description
+                </th>
+            </tr>
+        </thead>
+        @foreach (var obj in Model.Items.Items)
+        {
+            <tr>
+                <td width="50%">
+                    @obj.DateOfTask.ToString("g")
+                </td>
+                <td width="30%">
+                    @obj.NameTask
+                </td>
+                <td width="30%">
+                    @obj.Description
+                </td>
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        <a asp-controller="Home" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                            <i class="bi bi-pencil-square"></i> &nbsp; Edit
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                            <i class="bi bi-trash3"></i> &nbsp; Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+    @{
+        var prevDisabled = Model.Items.CurrentPage == 1 ? "disabled" : "";
+        var nextDisabled = Model.Items.PageCount == Model.Items.CurrentPage ? "disabled" : "";
+    }
+    <a asp-action="Index"
+       asp-route-pg="@(Model.Items.CurrentPage-1)"
+       asp-route-SearchString="@Model.SearchDay"
+       asp-route-SearchString="@Model.SearchMonth"
+       asp-route-SearchString="@Model.SearchYear"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+
+    <a asp-action="Index"
+       asp-route-pg="@(Model.Items.CurrentPage+1)"
+       asp-route-SearchString="@Model.SearchDay"
+       asp-route-SearchString="@Model.SearchMonth"
+       asp-route-SearchString="@Model.SearchYear"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
+</div>
